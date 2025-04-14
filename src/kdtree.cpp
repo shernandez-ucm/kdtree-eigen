@@ -71,6 +71,7 @@ public:
 
         int axis = depth % target.size();
         double dist = distance_squared(node->point,target);
+        Neighbor neighbor = std::make_pair(dist,node->point);
         bool goLeft = target(axis) < node->point(axis);
         KDNodePtr& first = goLeft ? node->left : node->right;
         KDNodePtr& second = goLeft ? node->right : node->left;
