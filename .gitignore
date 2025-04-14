@@ -1,5 +1,4 @@
 
-*.cmake
 .vscode/settings.json
 CMakeCache.txt
 CMakeFiles/4.0.1/CMakeDetermineCompilerABI_C.bin
@@ -32,3 +31,5 @@ Makefile
 .vscode/settings.json
 kdtree_test
 Makefile
+.vscode/*
+CMakeFiles/
