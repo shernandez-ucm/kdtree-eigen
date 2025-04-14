@@ -17,17 +17,14 @@ int main() {
         Vector2d(8.0, 1.0),
         Vector2d(7.0, 2.0)
     };
-    int axis=0;
-    std::sort(data.begin(), data.end(), [axis](const Point& a, const Point& b) {
-            return a(axis) < b(axis);
-        });
-    for(int i=0;i<data.size();i++){
-          std::cout << "Point: " << data[i].transpose() << "\n";
-    }
     std::cout << "-------------------" <<std::endl;
     KDTree tree(data);
     std::cout << "-------------------" <<std::endl;
     tree.print();
-
+    std::cout << "-------------------" <<std::endl;
+    VectorXd query = Vector2d(5.0, 3.0);
+    double min_dist=tree.kNearestNeighbors(query);
+    std::cout << "-------------------" <<std::endl;
+    std::cout << "query : " << query.transpose()  << ", distance : " << min_dist << std::endl;
     return 0;
 }

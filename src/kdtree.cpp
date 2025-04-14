@@ -61,49 +61,31 @@ public:
         printTree(root);
     }
 
-    /*void knnSearch(const KDNodePtr& node, const Point& target, int k, int depth, MaxHeap& heap){
-        if (!node) return;
-    
+    double distance_squared(Point& point1,  Point& point2){
+        double dist = (point1 - point2).squaredNorm();
+        return dist;
+    }
+
+    double minSearch( KDNodePtr& node,  Point& target, int depth){
+        if (!node) return std::numeric_limits<double>::max();;
+
         int axis = depth % target.size();
-        double dist = (node->point - target).squaredNorm();
-    
-        // Insertar en la cola si hay espacio o si es más cercano que el peor actual
-        if ((int)heap.size() < k) {
-            heap.emplace(dist, node->point);
-        } else if (dist < heap.top().first) {
-            heap.pop();
-            heap.emplace(dist, node->point);
-        }
-    
-        // Decidir la rama a visitar primero
+        double dist = distance_squared(node->point,target);
         bool goLeft = target(axis) < node->point(axis);
-        const KDNodePtr& first = goLeft ? node->left : node->right;
-        const KDNodePtr& second = goLeft ? node->right : node->left;
-    
-        knnSearch(first, target, k, depth + 1, heap);
-    
-        // Comprobar si es necesario revisar el otro lado del árbol
-        double diff = std::pow(target(axis) - node->point(axis), 2);
-        if ((int)heap.size() < k || diff < heap.top().first) {
-            knnSearch(second, target, k, depth + 1, heap);
-        }
+        KDNodePtr& first = goLeft ? node->left : node->right;
+        KDNodePtr& second = goLeft ? node->right : node->left;
+        std::cout << "point : " << node->point.transpose()  << ", distance : " << dist << std::endl;
+        double new_dist=minSearch(first, target,depth + 1);
+        double best=std::min(dist,new_dist);        
+        return best;
+    }
+
+
+    double kNearestNeighbors(Point& target){
+        double min_dist=minSearch(root,target,0);
+        return min_dist;
     }
     
-    // Método público para obtener los k vecinos más cercanos
-    std::vector<Point> kNearestNeighbors(const Point& target, int k){
-        MaxHeap heap;
-        knnSearch(root, target, k, 0, heap);
-    
-        std::vector<Point> neighbors;
-        while (!heap.empty()) {
-            neighbors.push_back(heap.top().second);
-            heap.pop();
-        }
-    
-        // Opcional: invertir para tener del más cercano al más lejano
-        std::reverse(neighbors.begin(), neighbors.end());
-        return neighbors;
-    } */
     private:
      KDNodePtr root;
 };
