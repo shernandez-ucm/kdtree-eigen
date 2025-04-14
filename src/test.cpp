@@ -17,7 +17,6 @@ int main() {
         Vector2d(8.0, 1.0),
         Vector2d(7.0, 2.0)
     };
-    std::cout << "-------------------" <<std::endl;
     KDTree tree(data);
     std::cout << "-------------------" <<std::endl;
     tree.print();

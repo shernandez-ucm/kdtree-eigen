@@ -39,7 +39,7 @@ public:
 
         size_t median_index = points.size() / 2;
         Point median_point = points[median_index];
-        std::cout  << "Median Index: " <<  median_index  << ", Depth: " <<  depth  << ", Point: " << median_point.transpose() << "\n";
+        //std::cout  << "Median Index: " <<  median_index  << ", Depth: " <<  depth  << ", Point: " << median_point.transpose() << "\n";
         std::vector<Point> left_points(points.begin(), points.begin() + median_index);
         std::vector<Point> right_points(points.begin() + median_index + 1, points.end());
 
