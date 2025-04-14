@@ -66,24 +66,26 @@ public:
         return dist;
     }
 
-    double minSearch( KDNodePtr& node,  Point& target, int depth){
+    double minSearch( KDNodePtr& node,  Point& target, int depth,std::vector<Neighbor>& knn_neighbors){
         if (!node) return std::numeric_limits<double>::max();;
 
         int axis = depth % target.size();
         double dist = distance_squared(node->point,target);
         Neighbor neighbor = std::make_pair(dist,node->point);
+        knn_neighbors.push_back(neighbor);
         bool goLeft = target(axis) < node->point(axis);
         KDNodePtr& first = goLeft ? node->left : node->right;
         KDNodePtr& second = goLeft ? node->right : node->left;
         std::cout << "point : " << node->point.transpose()  << ", distance : " << dist << std::endl;
-        double new_dist=minSearch(first, target,depth + 1);
+        double new_dist=minSearch(first, target,depth + 1,knn_neighbors);
         double best=std::min(dist,new_dist);        
         return best;
     }
 
 
     double kNearestNeighbors(Point& target){
-        double min_dist=minSearch(root,target,0);
+        std::vector<Neighbor> knn_neighbors;
+        double min_dist=minSearch(root,target,0,knn_neighbors);
         return min_dist;
     }
     
