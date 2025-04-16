@@ -9,3 +9,4 @@ include_directories(
     ${EIGEN_ROOT_DIR}
 )
 add_executable (kdtree_test src/kdtree.cpp  src/test.cpp )
+add_executable (kdtree_random src/kdtree.cpp  src/test_random.cpp )

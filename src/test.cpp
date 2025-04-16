@@ -21,9 +21,12 @@ int main() {
     std::cout << "-------------------" <<std::endl;
     tree.print();
     std::cout << "-------------------" <<std::endl;
-    VectorXd query = Vector2d(5.0, 3.0);
-    double min_dist=tree.kNearestNeighbors(query);
+    VectorXd query = Vector2d(8.0, 3.0);
+    std::vector<VectorXd> neighbors=tree.kNearestNeighbors(query,2);
     std::cout << "-------------------" <<std::endl;
-    std::cout << "query : " << query.transpose()  << ", distance : " << min_dist << std::endl;
+    std::cout << "query : " << query.transpose()  << ", neighbors : " << neighbors.size() << std::endl;
+    for(int i=0;i<neighbors.size();i++){
+        std::cout << "point : " << neighbors[i].transpose() << std::endl;
+    }
     return 0;
 }

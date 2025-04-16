@@ -76,16 +76,29 @@ public:
         bool goLeft = target(axis) < node->point(axis);
         KDNodePtr& first = goLeft ? node->left : node->right;
         KDNodePtr& second = goLeft ? node->right : node->left;
-        std::cout << "point : " << node->point.transpose()  << ", distance : " << dist << std::endl;
+        //std::cout << "point : " << node->point.transpose()  << ", distance : " << dist << std::endl;
         double new_dist=minSearch(first, target,depth + 1,knn_neighbors);
         double best=std::min(dist,new_dist);        
         return best;
     }
 
+    std::vector<Point> kNearestNeighbors(Point& target,int k){
+        std::vector<Neighbor> all_neighbors;
+        std::vector<Point> knn_neighbors;
+        double min_dist=minSearch(root,target,0,all_neighbors);
+        std::sort(all_neighbors.begin(), all_neighbors.end(), [](const Neighbor& a, const Neighbor& b) {
+            return a.first < b.first;
+        });
+        int r=std::min(int(all_neighbors.size()),k);
+        for(int i=0;i<r;i++){
+            knn_neighbors.push_back(all_neighbors[i].second);
+        }
+        return knn_neighbors;
+    }
 
     double kNearestNeighbors(Point& target){
-        std::vector<Neighbor> knn_neighbors;
-        double min_dist=minSearch(root,target,0,knn_neighbors);
+        std::vector<Neighbor> all_neighbors;
+        double min_dist=minSearch(root,target,0,all_neighbors);
         return min_dist;
     }
     
