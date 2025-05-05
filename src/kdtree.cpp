@@ -15,6 +15,7 @@ struct KDNode {
     Point point;
     std::unique_ptr<KDNode> left;
     std::unique_ptr<KDNode> right;
+    std::vector<Point> points;
 
     KDNode(const Point& pt) : point(pt), left(nullptr), right(nullptr) {}
 };
@@ -23,12 +24,14 @@ using KDNodePtr = std::unique_ptr<KDNode>;
 
 class KDTree {
 public:
-    KDTree(const std::vector<Point>& points, int depth = 0) {
-        root = build(points, depth);
+    int leaf_size;
+    KDTree(const std::vector<Point>& points, int depth = 0,int leafsize=1) {
+        root = build(points, depth,leafsize);
+        leaf_size=leafsize;
     }
 
-    KDNodePtr build(std::vector<Point> points, int depth) {
-        if (points.empty()) return nullptr;
+    KDNodePtr build(std::vector<Point> points, int depth,int leafsize=1) {
+        if (points.empty() || points.size()<=leafsize) return nullptr;
 
         int k = points[0].size();
         int axis = depth % k;
@@ -46,7 +49,7 @@ public:
         KDNodePtr node = std::make_unique<KDNode>(median_point);
         node->left = build(left_points, depth + 1);
         node->right = build(right_points, depth + 1);
-
+        node->points=points;
         return node;
     }
 
@@ -77,7 +80,21 @@ public:
         KDNodePtr& first = goLeft ? node->left : node->right;
         KDNodePtr& second = goLeft ? node->right : node->left;
         //std::cout << "point : " << node->point.transpose()  << ", distance : " << dist << std::endl;
-        double new_dist=minSearch(first, target,depth + 1,knn_neighbors);
+        double new_dist;
+        if (node->points.size()>=leaf_size){
+            new_dist=minSearch(first, target,depth + 1,knn_neighbors);
+        }
+        else{
+            new_dist=std::numeric_limits<double>::max();
+            for(int i=0;i<node->points.size();i++){
+                double bf_dist = distance_squared(node->points[i],target);
+                if (bf_dist<new_dist){
+                    new_dist=bf_dist;
+                }
+                Neighbor neighbor = std::make_pair(bf_dist,node->points[i]);
+                knn_neighbors.push_back(neighbor);
+            }
+        }
         double best=std::min(dist,new_dist);        
         return best;
     }
